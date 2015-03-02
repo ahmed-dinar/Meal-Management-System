@@ -93,14 +93,7 @@ public class AboutMM extends JFrame implements MouseListener {
 		/* licence panel */
 
 		
-		lincence.setText("UVA Arena is a windows based, non-commercial, open source utility application to make problem solving easier for the programmers. \n\nIt is based on popular UVA Online Judge and uses APIs from uHunt. Copyright (C) 2014, Sudipto Chandra."
-
- + "\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version."
-
- + "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
-
-
- + "You should have received a copy of the GNU General Public License along with this program. If no see <http://www.gnu.org/licenses/>");
+		lincence.setText("");
 		
 		
 		/**************/
