@@ -1,5 +1,5 @@
 # Meal Management Solution
-A desktop app for Meal Management written in JAVA. 
+A desktop app for Meal Management written in JAVA & SQLite Database. 
 
 ### Screenshots
 
