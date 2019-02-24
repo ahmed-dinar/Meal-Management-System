@@ -3,6 +3,9 @@ package Manager;
 import java.awt.Color;
 import java.awt.Insets;
 import java.io.File;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -27,10 +30,23 @@ import DB.ConfigureDB;
 public class Manager{
 
 	private static String[] op = {"Configure","Cancel"};
+	private static String DB_FILE_NAME = "mealManagement.db";
+	private static String HOME_DIR = System.getProperty("user.home");
+	private static String CURRENT_DIR = System.getProperty("user.dir");
 	
 	public static void main(String[] args) {
 		
 		try {
+			Path path = Paths.get(HOME_DIR, DB_FILE_NAME);
+			
+			System.out.println(" CURRENT_DIR = " + CURRENT_DIR );
+			
+			if (Files.exists(path)) {
+				System.out.println(path + " exixts");
+			} else  {
+				System.out.println(path + " not exixts");
+			}
+			
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			UIManager.getDefaults().put("TabbedPane.contentBorderInsets", new Insets(4,10,1,10));
 			UIManager.getDefaults().put("TabbedPane.tabsOverlapBorder", true);
@@ -69,7 +85,7 @@ public class Manager{
 	}
 	
 	private  static String xml_error_msg(){
-		return "'manager.xml'  not found in the directory '".concat(getCurrentDir()).concat("'\n")
+		return "'manager.xml'  not found in the directory '".concat(CURRENT_DIR).concat("'\n")
 		.concat("Do you want to create xml file and config?\n");
 	}
 	
@@ -81,6 +97,7 @@ public class Manager{
 			org.w3c.dom.Document doc = parser.parse(xmlF);
 		    NodeList nodelist = doc.getElementsByTagName("Manager");
 		    String path = null;
+		    
 		    for(int i=0; i<nodelist.getLength(); i++){
 		    	org.w3c.dom.Node node = nodelist.item(i);
 		    	if(node.getNodeType() == Node.ELEMENT_NODE){
@@ -88,6 +105,7 @@ public class Manager{
 		    		path = element.getElementsByTagName("setups").item(0).getAttributes().item(2).getTextContent();
 		    	}
 		    }
+		    
 		    if(path.equals("")){
 				String msg = "Its seem like you log in first time,please config\nWe will set things for you!".concat("'\n");
 				int choise = JOptionPane.showOptionDialog(null, msg, "Configuration", JOptionPane.NO_OPTION, 0, null, op, op[1]);
@@ -122,40 +140,13 @@ public class Manager{
 	}
 
 	private static boolean isDb(String path) {
-		boolean is = false;
-		File file = new File(path+"/mealManagement.db");
-		if(file.exists()){
-			is = true;
-		}
-		return is;
+		Path dbPath = Paths.get(path, DB_FILE_NAME);
+		return Files.exists(dbPath);
 	}
 
 	private static void Configuration() {
 		new Configuration().ConfigAll();
 	}
 
-	private static  String getCurrentDir() {
-		String dir = null;
-		try {
-			dir = URLDecoder.decode(ClassLoader.getSystemClassLoader().getResource(".").getPath() , "UTF-8");
-			String temp = "";
-			for (int i = 0; i < dir.length(); i++) {
-				
-				if(i==0 && dir.charAt(i) == '\\' || i==0 && dir.charAt(i) == '/'){
-					continue;
-				}
-				if(dir.charAt(i) == '/'){
-					temp += '\\';
-				}
-				else {
-					temp += dir.charAt(i);
-				}
-			}
-			dir = temp;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return dir;
-	}
 
 }

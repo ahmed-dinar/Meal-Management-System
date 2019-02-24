@@ -11,8 +11,13 @@ import java.util.Formatter;
 
 import javax.swing.JOptionPane;
 
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class createTables {
 
+	private static String DB_FILE_NAME = "mealManagement.db";
 	private static String[] op = {"Ok","Cancel"};
 	private Connection conn  = null;
 	private String password;
@@ -23,7 +28,7 @@ public class createTables {
 		this.password = password;
 		if(!isDb(path)){
 			createDbFile(path);
-			new dbConnect(path+"/mealManagement.db");
+			new dbConnect(Paths.get(path, DB_FILE_NAME).toString());
 			conn = dbConnect.GetConnection();
 			createAll();
 		}
@@ -32,7 +37,7 @@ public class createTables {
 			if(choise == 0){
 				deleteDbFile(path);
 				createDbFile(path);
-				new dbConnect(path+"/mealManagement.db");
+				new dbConnect(Paths.get(path, DB_FILE_NAME).toString());
 				conn = dbConnect.GetConnection();
 				createAll();
 			}
@@ -40,7 +45,7 @@ public class createTables {
 	}
 	
 	private void deleteDbFile(String path) {
-		File file = new File(path+"/mealManagement.db");
+		File file = new File(Paths.get(path, DB_FILE_NAME).toString());
 		file.delete();
 	}
 
@@ -61,7 +66,7 @@ public class createTables {
 
 	private void createDbFile(String path) {
 		try {
-			new Formatter(path+"/mealManagement.db");
+			new Formatter(Paths.get(path, DB_FILE_NAME).toString());
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
@@ -69,7 +74,7 @@ public class createTables {
 
 	private static boolean isDb(String path) {
 		boolean is = false;
-		File file = new File(path+"/mealManagement.db");
+		File file = new File(Paths.get(path, DB_FILE_NAME).toString());
 		if(file.exists()){
 			is = true;
 		}

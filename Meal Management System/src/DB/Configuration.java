@@ -23,6 +23,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -116,7 +120,8 @@ public class Configuration implements ActionListener{
         while(JOptionPane.showOptionDialog(null, container, "Configure", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, op, op[0])==0){
         	if(checkall()){
 				manName = name.getText();
-				dbpath = formatPath(path.getText());
+				dbpath = Paths.get(path.getText()).toString();
+				
 				Password = pass.getText();
 				new setupXML(manName,dbpath);
 				new createTables(dbpath,Password);
@@ -126,22 +131,6 @@ public class Configuration implements ActionListener{
         }
 	}
 	
-	private String formatPath(String path) {
-		String temp = "";
-		for (int i = 0; i < path.length(); i++) {
-			
-			if(i==0 && path.charAt(i) == '\\' || i==0 && path.charAt(i) == '/'){
-				continue;
-			}
-			if(path.charAt(i) == '\\'){
-				temp += '/';
-			}
-			else {
-				temp += path.charAt(i);
-			}
-		}
-		return temp;
-	}
 
 	private void readXml() {
 		DocumentBuilder parser;

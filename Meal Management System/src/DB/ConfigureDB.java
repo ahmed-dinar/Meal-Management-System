@@ -28,6 +28,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -56,6 +60,10 @@ public class ConfigureDB implements ActionListener,ItemListener {
 	private String manName;
 	private String dbpath;
 	private String Password;
+	
+	private static String DB_FILE_NAME = "mealManagement.db";
+	private static String HOME_DIR = System.getProperty("user.home");
+	private static String CURRENT_DIR = System.getProperty("user.dir");
 
 	public ConfigureDB() {
 	
@@ -119,7 +127,7 @@ public class ConfigureDB implements ActionListener,ItemListener {
         	else if(isCon){
         		if(checkCon()){  
     				manName = name.getText();
-    				dbpath = formatPath(path.getText());
+    				dbpath = Paths.get(path.getText()).toString();
     				Password = pass.getText();
     				new setupXML(manName,dbpath);
     				new createTables(dbpath,Password);
@@ -139,7 +147,7 @@ public class ConfigureDB implements ActionListener,ItemListener {
 	
 	private void changeDirectory() {
 		try {
-			new setupXML(readXml(new File( "manager.xml")),formatPath(dirpath.getText()));
+			new setupXML(readXml(new File( "manager.xml")),Paths.get(dirpath.getText()).toString());
 			JOptionPane.showMessageDialog(null,"Databse path successfully changed to '"+dirpath.getText()+"'\nPlease restart application to get Effect.");
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			JOptionPane.showMessageDialog(null,"Unknown error occur to change");
@@ -163,23 +171,6 @@ public class ConfigureDB implements ActionListener,ItemListener {
 		return cman;
 	}
 	
-	private String formatPath(String path) {
-		String temp = "";
-		for (int i = 0; i < path.length(); i++) {
-			
-			if(i==0 && path.charAt(i) == '\\' || i==0 && path.charAt(i) == '/'){
-				continue;
-			}
-			if(path.charAt(i) == '\\'){
-				temp += '/';
-			}
-			else {
-				temp += path.charAt(i);
-			}
-		}
-		return temp;
-	}
-
 	private boolean checkCon() {
 		if(!checkEntry(name.getText())  || !checkEntry(pass.getText().toString()) || path.getText().equals("") ){
 			return false;
@@ -204,7 +195,6 @@ public class ConfigureDB implements ActionListener,ItemListener {
 			return false;
 		}
 		else {
-			ss = ss+"\\mealManagement.db";
 			if(!isDb(ss)){
 				return false;
 			}
@@ -214,12 +204,8 @@ public class ConfigureDB implements ActionListener,ItemListener {
 	}
 	
 	private static boolean isDb(String path) {
-		boolean is = false;
-		File file = new File(path);
-		if(file.exists()){
-			is = true;
-		}
-		return is;
+		Path dbPath = Paths.get(path, DB_FILE_NAME);
+		return Files.exists(dbPath);
 	}
 
 	private Container dirP(){
